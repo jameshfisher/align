@@ -8,7 +8,6 @@
 #include <iostream>
 #include <vector>
 #include <boost/algorithm/string/trim.hpp>
-#include <boost/tokenizer.hpp>
 
 using namespace std;
 
@@ -88,7 +87,7 @@ string replace(
 
 // The four kinds of alignment you can do with this tool.
 enum Alignment {
-  align_left,
+  align_left = 1,
   align_right,
   align_center,
   align_justify
@@ -215,7 +214,38 @@ string align_para(string para, unsigned char width=72, Alignment alignment=align
   return justified_para;
   }
 
-int main() {
+int main(int argc, char* argv[]) {
+  enum Alignment alignment = align_justify;
+  int width = 72;
+  
+  for(int i = 1; i < argc; i++) {
+    string arg = argv[i];
+    if(arg == "left") {
+      alignment = align_left;
+      }
+    else if(arg == "right") {
+      alignment = align_right;
+      }
+    else if(arg == "center") {
+      alignment = align_center;
+      }
+    else if(arg == "justify") {
+      alignment = align_justify;
+      }
+    else {
+      // Attempt to parse as line width
+      const char *arg_char = arg.c_str();
+      width = atoi(arg_char);
+      if(!width) {
+        // Not a valid argument.
+        // Note that atoi() returning 0 on failure is OK;
+        // a width of 0 doesn't make sense anyway.
+        cout << "Please supply a valid argument.";
+        return 1;
+        }
+      }
+    }
+  
   string line;
   bool first_line = true;
   while(cin) {
@@ -224,7 +254,7 @@ int main() {
     }
     first_line = false;
     getline(cin, line);
-    cout << align_para(line);
+    cout << align_para(line, width, alignment);
     }
   return 0;
   }
