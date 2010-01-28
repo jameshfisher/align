@@ -189,12 +189,9 @@ string align_para(string para, unsigned char width=72, Alignment alignment=align
   
   // Add the final, shorter slug
   current_slug = current_slug.substr(0,current_slug.length()-1);
-  if(alignment == align_justify) {
+  if(alignment == align_justify || alignment == align_left) {
     // With justification, we don't do the last line.
     slugs.push_back(current_slug);
-    }
-  else if(alignment == align_left) {
-    
     }
   else if(alignment == align_right) {
     slugs.push_back(right_slug(current_slug, width));
